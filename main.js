@@ -48,9 +48,8 @@ function getAllUsers() {
 }
 
 //this condition to execute this code in index.html only
-if (window.location.pathname.includes("index.html")) {
-  getAllUsers();
-}
+getAllUsers();
+
 // getAllUsers();
 
 function getPostsForSpecificUser(user_id, userName) {
@@ -119,9 +118,8 @@ function getPostsForSpecificUser(user_id, userName) {
     }
   };
 }
-if (window.location.pathname.includes("index.html")) {
-  getPostsForSpecificUser(1, "Leanne Graham");
-}
+getPostsForSpecificUser(1, "Leanne Graham");
+
 // getPostsForSpecificUser(1, "Leanne Graham");
 
 document.addEventListener("click", function (e) {
