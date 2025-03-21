@@ -37,21 +37,38 @@ function showUsersData(users) {
 
 //function to get all users from api
 
+// function getAllUsers() {
+//   return new Promise(function (resolveFunc, rejectFunc) {
+//     let myReq = new XMLHttpRequest();
+//     myReq.open("GET", "https://jsonplaceholder.typicode.com/users");
+//     myReq.responseType = "json";
+//     myReq.send();
+//     myReq.onload = function () {
+//       if (myReq.status >= 200 && myReq.status < 300) {
+//         let users = myReq.response;
+//         showUsersData(users);
+//         resolveFunc();
+//       } else {
+//         rejectFunc("There Is An Error No Data Found");
+//       }
+//     };
+//   });
+// }
+
 function getAllUsers() {
   return new Promise(function (resolveFunc, rejectFunc) {
-    let myReq = new XMLHttpRequest();
-    myReq.open("GET", "https://jsonplaceholder.typicode.com/users");
-    myReq.responseType = "json";
-    myReq.send();
-    myReq.onload = function () {
-      if (myReq.status >= 200 && myReq.status < 300) {
-        let users = myReq.response;
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((fullHttpResponse) => {
+        if (fullHttpResponse.ok) {
+          return fullHttpResponse.json(); //return a promise
+        } else {
+          rejectFunc("There Is An Error Can't Get Users Data");
+        }
+      })
+      .then((users) => {
         showUsersData(users);
         resolveFunc();
-      } else {
-        rejectFunc("There Is An Error No Data Found");
-      }
-    };
+      });
   });
 }
 
