@@ -57,18 +57,20 @@ function showUsersData(users) {
 
 function getAllUsers() {
   return new Promise(function (resolveFunc, rejectFunc) {
-    fetch("https://jsonplaceholder.typicode.com/users")
+    fetch("https://jsonplaceholder.typicode.com/user22s")
       .then((fullHttpResponse) => {
         if (fullHttpResponse.ok) {
           return fullHttpResponse.json(); //return a promise
         } else {
           rejectFunc("There Is An Error Can't Get Users Data");
+          throw "I Handle the error";
         }
       })
       .then((users) => {
         showUsersData(users);
         resolveFunc();
-      });
+      })
+      .catch((e) => console.log("Errorrr: " + e));
   });
 }
 
