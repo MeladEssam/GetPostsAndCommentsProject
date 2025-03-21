@@ -1,56 +1,67 @@
 // let usersContainer = document.querySelector(".users-content");
 // let postsContainer = document.querySelector(".posts-content");
 
+//function that show users
+function showUsersData(users) {
+  let usersContainer = document.querySelector(".users-content");
+  for (let i = 0; i < users.length; i++) {
+    //create main div
+    let userBox = document.createElement("div");
+    userBox.setAttribute("userId", users[i].id);
+    //set class name
+    userBox.className = "user-box";
+    //create h3 for user name
+    let userNameHeader = document.createElement("h3");
+    //set class name for the h3
+    userNameHeader.className = "user-name";
+    //create username text
+    let userNameText = document.createTextNode(users[i].name);
+    //append the name into h3
+    userNameHeader.appendChild(userNameText);
+    //create h4 element for the email of the user
+    let userEmailElement = document.createElement("h4");
+    //set class name for h4 element
+    userEmailElement.className = "user-email";
+    //create email text
+    let emailText = document.createTextNode(users[i].email);
+    //append email text into h4 email elemnt
+    userEmailElement.appendChild(emailText);
+    //append h3 element into main div user box
+    userBox.appendChild(userNameHeader);
+    //append email element into main div
+    userBox.appendChild(userEmailElement);
+    //append main div into conatiner
+    usersContainer.appendChild(userBox);
+  }
+}
+
 //function to get all users from api
 
 function getAllUsers() {
-  let myReq = new XMLHttpRequest();
-  myReq.open("GET", "https://jsonplaceholder.typicode.com/users");
-  myReq.responseType = "json";
-  myReq.send();
-  myReq.onload = function () {
-    if (myReq.status >= 200 && myReq.status < 300) {
-      let usersContainer = document.querySelector(".users-content");
-      let users = myReq.response;
-      for (let i = 0; i < users.length; i++) {
-        //create main div
-        let userBox = document.createElement("div");
-        userBox.setAttribute("userId", users[i].id);
-        //set class name
-        userBox.className = "user-box";
-        //create h3 for user name
-        let userNameHeader = document.createElement("h3");
-        //set class name for the h3
-        userNameHeader.className = "user-name";
-        //create username text
-        let userNameText = document.createTextNode(users[i].name);
-        //append the name into h3
-        userNameHeader.appendChild(userNameText);
-        //create h4 element for the email of the user
-        let userEmailElement = document.createElement("h4");
-        //set class name for h4 element
-        userEmailElement.className = "user-email";
-        //create email text
-        let emailText = document.createTextNode(users[i].email);
-        //append email text into h4 email elemnt
-        userEmailElement.appendChild(emailText);
-        //append h3 element into main div user box
-        userBox.appendChild(userNameHeader);
-        //append email element into main div
-        userBox.appendChild(userEmailElement);
-        //append main div into conatiner
-        usersContainer.appendChild(userBox);
+  return new Promise(function (resolveFunc, rejectFunc) {
+    let myReq = new XMLHttpRequest();
+    myReq.open("GET", "https://jsonplaceholder.typicode.com/users");
+    myReq.responseType = "json";
+    myReq.send();
+    myReq.onload = function () {
+      if (myReq.status >= 200 && myReq.status < 300) {
+        let users = myReq.response;
+        showUsersData(users);
+        resolveFunc();
+      } else {
+        rejectFunc("There Is An Error No Data Found");
       }
-    } else {
-      alert("There Is An Error");
-    }
-  };
+    };
+  });
 }
 
-//this condition to execute this code in index.html only
-getAllUsers();
-
-// getAllUsers();
+getAllUsers()
+  .then(() => {
+    getPostsForSpecificUser(1, "Leanne Graham");
+  })
+  .catch((error) => {
+    alert(error);
+  });
 
 function getPostsForSpecificUser(user_id, userName) {
   let myReq = new XMLHttpRequest();
@@ -118,7 +129,7 @@ function getPostsForSpecificUser(user_id, userName) {
     }
   };
 }
-getPostsForSpecificUser(1, "Leanne Graham");
+// getPostsForSpecificUser(1, "Leanne Graham");
 
 // getPostsForSpecificUser(1, "Leanne Graham");
 
