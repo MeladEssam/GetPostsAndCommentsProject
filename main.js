@@ -57,7 +57,7 @@ function showUsersData(users) {
 
 function getAllUsers() {
   return new Promise(function (resolveFunc, rejectFunc) {
-    fetch("https://jsonplaceholder.typicode.com/user22s")
+    fetch("https://jsonplaceholder.typicode.com/users")
       .then((fullHttpResponse) => {
         if (fullHttpResponse.ok) {
           return fullHttpResponse.json(); //return a promise
