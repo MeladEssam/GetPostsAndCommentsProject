@@ -114,8 +114,8 @@ function getAllUsersUsingAxios() {
     axios
       .get("https://jsonplaceholder.typicode.com/users")
       .then((response) => {
-        console.log(response.data);
         let users = response.data;
+        console.log(users);
         showUsersData(users);
         resolveFunc(); //resolve promise
       })
@@ -124,6 +124,7 @@ function getAllUsersUsingAxios() {
       });
   });
 }
+
 function getPostsForSpecificUserUsingAxios(user_id, userName) {
   let url = `https://jsonplaceholder.typicode.com/posts?userId=${user_id}`;
   axios
@@ -137,13 +138,58 @@ function getPostsForSpecificUserUsingAxios(user_id, userName) {
     });
 }
 
-getAllUsersUsingAxios()
-  .then(() => {
-    getPostsForSpecificUserUsingAxios(1, "Leanne Graham");
-  })
-  .catch((error) => {
-    alert("Error Is :" + error);
-  });
+//fun get posts and use async and await
+async function getPostsForSpecificUserUsingAxiosSyncAwait(user_id, userName) {
+  try {
+    let url = `https://jsonplaceholder.typicode.com/posts?userId=${user_id}`;
+    let response = await axios.get(url);
+    let userPostsList = response.data;
+    showUserPostsData(userPostsList, userName);
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
+
+///function get users using async and await
+
+async function getAllUsersUsingAxiosAsyncAwait() {
+  try {
+    let response = await axios.get(
+      "https://jsonplaceholder.typicode.com/users"
+    );
+    let users = response.data;
+    showUsersData(users);
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
+
+async function initApp() {
+  try {
+    await getAllUsersUsingAxiosAsyncAwait();
+    await getPostsForSpecificUserUsingAxiosSyncAwait(1, "Leanne Graham");
+  } catch (e) {
+    alert("Errorrrrr Is : " + e);
+  }
+}
+//start app
+initApp();
+
+// getAllUsersUsingAxiosAsyncAwait()
+//   .then(() => {
+//     getPostsForSpecificUserUsingAxiosSyncAwait(1, "Leanne Graham");
+//   })
+//   .catch((error) => {
+//     alert("Error Is :" + error);
+//   });
+
+// getAllUsersUsingAxios()
+//   .then(() => {
+//     getPostsForSpecificUserUsingAxios(1, "Leanne Graham");
+//   })
+//   .catch((error) => {
+//     alert("Error Is :" + error);
+//   });
 
 // getAllUsers()
 //   .then(() => {
@@ -174,12 +220,12 @@ function getPostsForSpecificUser(user_id, userName) {
 
 document.addEventListener("click", function (e) {
   if (e.target.closest(".user-box")) {
-    console.log(e.target.closest(".user-box"));
     console.log(e.target.closest(".user-box").getAttribute("userId"));
     let userBox = e.target.closest(".user-box");
     let userName = userBox.children[0].innerHTML;
     let userId = userBox.getAttribute("userId");
-    getPostsForSpecificUserUsingAxios(userId, userName);
+    // getPostsForSpecificUserUsingAxios(userId, userName);
+    getPostsForSpecificUserUsingAxiosSyncAwait(userId, userName);
   }
 });
 
@@ -189,7 +235,8 @@ document.addEventListener("click", function (event) {
     Popup.classList.add("opend");
 
     let postId = parseInt(event.target.getAttribute("postId"));
-    getCommentsUsingAxios(postId);
+    // getCommentsUsingAxios(postId);
+    getCommentsUsingAxiosAsyncAwait(postId);
   }
 });
 
@@ -230,6 +277,19 @@ function getCommentsUsingAxios(postId) {
     .catch((error) => {
       alert("Error In Get Comments " + error.message);
     });
+}
+
+//get comments async await
+async function getCommentsUsingAxiosAsyncAwait(postId) {
+  try {
+    let response = await axios.get(
+      `https://jsonplaceholder.typicode.com/posts/${postId}/comments`
+    );
+    let postComments = response.data;
+    showPostComments(postComments);
+  } catch (e) {
+    alert("Error In Get Comments: " + e.message);
+  }
 }
 
 //function to show comments
